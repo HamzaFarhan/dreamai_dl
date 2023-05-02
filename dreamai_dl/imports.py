@@ -2,10 +2,11 @@ import timm
 import torch
 import torch.nn as nn
 import lightning as L
-import torchmetrics as tm
+import torchmetrics as TM
 import torch.nn.functional as F
 from torchvision.utils import make_grid
 from torchvision import transforms, models
+import torchvision.transforms.functional as TF
 from torch.utils.data import Dataset, DataLoader
 
 from dreamai.core import *
