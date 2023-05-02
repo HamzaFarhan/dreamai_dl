@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "dreamai_dl"
+  site-url: "https://HamzaFarhan.github.io/dreamai_dl"
+  description: "Deep Learning tools based on dreamai."
+  repo-branch: main
+  repo-url: "https://github.com/HamzaFarhan/dreamai_dl"
