@@ -7,4 +7,6 @@ d = { 'settings': { 'branch': 'main',
                 'lib_path': 'dreamai_dl'},
   'syms': { 'dreamai_dl.core': {},
             'dreamai_dl.imports': {},
-            'dreamai_dl.utils': {'dreamai_dl.utils.default_device': ('utils.html#default_device', 'dreamai_dl/utils.py')}}}
+            'dreamai_dl.utils': { 'dreamai_dl.utils.default_device': ('utils.html#default_device', 'dreamai_dl/utils.py'),
+                                  'dreamai_dl.utils.is_tensor': ('utils.html#is_tensor', 'dreamai_dl/utils.py'),
+                                  'dreamai_dl.utils.plt_show': ('utils.html#plt_show', 'dreamai_dl/utils.py')}}}
