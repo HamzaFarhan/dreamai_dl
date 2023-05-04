@@ -1,0 +1,8 @@
+dreamai
+torchvision
+torchmetrics
+timm
+torch
+setuptools
+lightning
+fastai
