@@ -1,8 +1,9 @@
-dreamai
+lightning
 torchvision
+setuptools
+dreamai
+scikit_learn
+fastai
+torch
 torchmetrics
 timm
-torch
-setuptools
-lightning
-fastai
