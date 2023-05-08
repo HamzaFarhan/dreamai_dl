@@ -19,6 +19,7 @@ def split_df(train_df, test_size=0.15, stratify_idx=1):
     return train_df,test_df
 
 def get_data_stats(df, data_path='', img_idx=0, img_size=224, channels=3, stats_percentage=0.7, bs=32, num_workers=4, device=None):
+    "Calculates the mean and std of a dataset."
     
     if device is None:
         device = default_device()
@@ -68,6 +69,7 @@ def get_data_stats(df, data_path='', img_idx=0, img_size=224, channels=3, stats_
     return mean.cpu(), std.cpu()
 
 class StatsDataset(Dataset):
+    "Dataset for calculating mean and std of a dataset."
     def __init__(self, data, data_path='', img_idx=0, tfms=None, channels=3, **kwargs):
         super().__init__()
         if tfms is None:
@@ -87,6 +89,7 @@ class StatsDataset(Dataset):
         return {'image': self.tfms(img)}
 
 class SLDataset(Dataset):
+    "Dataset for single label classification."
     def __init__(self, data, data_path='', tfms=None, img_idx=0, label_idx=1, channels=3, class_names=None, **kwargs):
         super().__init__()
         
@@ -160,6 +163,7 @@ class SLDataset(Dataset):
         return data
     
 class SLDataModule(L.LightningDataModule):
+    "DataModule for single label classification."
     def __init__(self, parq_file, data_path='', train_tfms=None, test_tfms=None, train_size=0.8, valid_size=0.2, test_size=0.1,
                  img_size=512, channels=3, batch_size=64, num_workers=6, pin_memory=False, calc_stats=False, stats_img_size=224,
                  stats_file='img_stats.pkl', seed=42, **kwargs):
@@ -187,11 +191,9 @@ class SLDataModule(L.LightningDataModule):
         else:
             self.img_mean, self.img_std = imagenet_stats
         if self.train_tfms is None:
-            self.train_tfms = transforms.Compose([transforms.Resize(self.img_size),
-                                                  transforms.RandomHorizontalFlip(), transforms.RandomVerticalFlip(),
-                                                  transforms.ToTensor()])
+            self.train_tfms = create_transform(input_size=self.img_size, is_training=True)
         if self.test_tfms is None:
-            self.test_tfms = transforms.Compose([transforms.Resize(self.img_size), transforms.ToTensor()])
+            self.test_tfms = create_transform(input_size=self.img_size)
         
         update_norm(self.train_tfms, self.img_mean, self.img_std)
         update_norm(self.test_tfms, self.img_mean, self.img_std)

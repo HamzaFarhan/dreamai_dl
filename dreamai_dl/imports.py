@@ -15,6 +15,7 @@ from torch.utils.data import Dataset, DataLoader
 from torch.utils.data.dataset import random_split
 from sklearn.model_selection import train_test_split
 from lightning.pytorch.callbacks import ModelCheckpoint
+from timm.data.transforms_factory import create_transform
 from lightning.pytorch.utilities.model_summary import ModelSummary
 
 
