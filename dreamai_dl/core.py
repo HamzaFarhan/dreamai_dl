@@ -10,6 +10,7 @@ from .data import *
 
 # %% ../nbs/02_core.ipynb 4
 class SLModel(L.LightningModule):
+    "LightningModule for single label classification."
     
     def __init__(self, model, learning_rate, cosine_t_max, in_chans=3, seed=42):
         super().__init__()

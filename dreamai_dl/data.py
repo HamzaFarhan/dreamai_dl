@@ -69,7 +69,8 @@ def get_data_stats(df, data_path='', img_idx=0, img_size=224, channels=3, stats_
     return mean.cpu(), std.cpu()
 
 class StatsDataset(Dataset):
-    "Dataset for calculating mean and std of a dataset."
+    "Dataset for calculating the mean and std of a dataset."
+    
     def __init__(self, data, data_path='', img_idx=0, tfms=None, channels=3, **kwargs):
         super().__init__()
         if tfms is None:
@@ -90,6 +91,7 @@ class StatsDataset(Dataset):
 
 class SLDataset(Dataset):
     "Dataset for single label classification."
+    
     def __init__(self, data, data_path='', tfms=None, img_idx=0, label_idx=1, channels=3, class_names=None, **kwargs):
         super().__init__()
         
@@ -164,6 +166,7 @@ class SLDataset(Dataset):
     
 class SLDataModule(L.LightningDataModule):
     "DataModule for single label classification."
+    
     def __init__(self, parq_file, data_path='', train_tfms=None, test_tfms=None, train_size=0.8, valid_size=0.2, test_size=0.1,
                  img_size=512, channels=3, batch_size=64, num_workers=6, pin_memory=False, calc_stats=False, stats_img_size=224,
                  stats_file='img_stats.pkl', seed=42, **kwargs):
