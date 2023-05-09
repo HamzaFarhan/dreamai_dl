@@ -177,12 +177,15 @@ class SLDataModule(L.LightningDataModule):
                 img_size = tuple(img_size)
         test_size = test_size/valid_size
         stats_file = Path(data_path)/stats_file
+        if path_or_str(parq_file):
+            self.df = pd.read_parquet(parq_file)
+        else:
+            self.df = parq_file
         store_attr(','.join(dict_keys(locals_to_params(locals()))))
 
     def prepare_data(self):
         if self.calc_stats:
-            df = pd.read_parquet(self.parq_file)
-            self.img_mean, self.img_std = get_data_stats(df, data_path=self.data_path, img_size=self.stats_img_size,
+            self.img_mean, self.img_std = get_data_stats(self.df, data_path=self.data_path, img_size=self.stats_img_size,
                                                          stats_percentage=0.7, bs=64, channels=self.channels,
                                                          num_workers=self.num_workers, device='cpu')
             save_obj(self.stats_file, [self.img_mean, self.img_std])
@@ -194,7 +197,7 @@ class SLDataModule(L.LightningDataModule):
         else:
             self.img_mean, self.img_std = imagenet_stats
         if self.train_tfms is None:
-            self.train_tfms = create_transform(input_size=self.img_size, is_training=True)
+            self.train_tfms = create_transform(input_size=self.img_size, is_training=True, hflip=0.5, vflip=0.5, scale=(0.8,1.0))
         if self.test_tfms is None:
             self.test_tfms = create_transform(input_size=self.img_size)
         
@@ -202,8 +205,7 @@ class SLDataModule(L.LightningDataModule):
         update_norm(self.test_tfms, self.img_mean, self.img_std)
     
     def setup(self, stage=None):
-        df = pd.read_parquet(self.parq_file)
-        train_df, valid_df = split_df(df, test_size=self.valid_size)
+        train_df, valid_df = split_df(self.df, test_size=self.valid_size)
         valid_df, test_df = split_df(valid_df, test_size=self.test_size)
         self.train_ds = SLDataset(train_df, data_path=self.data_path, tfms=self.train_tfms, channels=self.channels)
         self.valid_ds = SLDataset(valid_df, data_path=self.data_path, tfms=self.test_tfms, channels=self.channels)
