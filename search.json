@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "Core",
+    "section": "",
+    "text": "source\n\nSLModel\n\n SLModel (model, learning_rate, cosine_t_max, in_chans=3, seed=42)\n\nLightningModule for single label classification."
+  },
+  {
+    "objectID": "utils.html",
+    "href": "utils.html",
+    "title": "Utils",
+    "section": "",
+    "text": "source\n\nplot_loss_and_acc\n\n plot_loss_and_acc (log_dir, loss_ylim=(0.0, 0.9), acc_ylim=(0.7, 1.0),\n                    save_loss=None, save_acc=None)\n\n\nsource\n\n\nshow_img\n\n show_img (img, cmap=None, titles=[''], figsize=(7, 7))\n\n\nsource\n\n\nplt_show\n\n plt_show (im, cmap=None, title='', figsize=(7, 7))\n\n\nsource\n\n\ntensor_to_img\n\n tensor_to_img (t)\n\n\nsource\n\n\nis_tensor\n\n is_tensor (x)\n\n\nsource\n\n\nupdate_norm\n\n update_norm (tfms, mean, std, idx=None)\n\n\nsource\n\n\ndel_norm\n\n del_norm (tfms, idx=None)\n\n\nsource\n\n\nget_norm_id\n\n get_norm_id (tfms)\n\n\nsource\n\n\nis_norm\n\n is_norm (x)\n\n\nsource\n\n\nget_norm\n\n get_norm (tfms)\n\n\nsource\n\n\nunfreeze_model\n\n unfreeze_model (model)\n\n\nsource\n\n\nfreeze_model\n\n freeze_model (model)\n\n\nsource\n\n\nunfreeze_params\n\n unfreeze_params (params)\n\n\nsource\n\n\nfreeze_params\n\n freeze_params (params)\n\n\nsource\n\n\nis_unfrozen\n\n is_unfrozen (model)\n\n\nsource\n\n\nis_frozen\n\n is_frozen (model)\n\n\nsource\n\n\nparams\n\n params (m)\n\n\nsource\n\n\nis_sequential\n\n is_sequential (x)\n\n\nsource\n\n\nUnNormalize\n\n UnNormalize (mean, std, *args, **kwargs)\n\nNormalize a tensor image with mean and standard deviation. This transform does not support PIL Image. Given mean: (mean[1],...,mean[n]) and std: (std[1],..,std[n]) for n channels, this transform will normalize each channel of the input torch.*Tensor i.e., output[channel] = (input[channel] - mean[channel]) / std[channel]\n.. note:: This transform acts out of place, i.e., it does not mutate the input tensor.\nArgs: mean (sequence): Sequence of means for each channel. std (sequence): Sequence of standard deviations for each channel. inplace(bool,optional): Bool to make this operation in-place."
+  },
+  {
+    "objectID": "data.html",
+    "href": "data.html",
+    "title": "Data",
+    "section": "",
+    "text": "source"
+  },
+  {
+    "objectID": "data.html#usage",
+    "href": "data.html#usage",
+    "title": "Data",
+    "section": "Usage",
+    "text": "Usage\n\ndata_path = Path('../img_data/')\nimgs_path = data_path/'images'\nparq_file = data_path/'data.parquet'\nimg_size = 512\nchannels = 1\nbatch_size = 4\n\n\n# CALCULATE STATS\n\ntrain_tfms = create_transform(img_size, color_jitter=None, hflip=0.5, vflip=0.5, scale=(0.8,1.0),\n                              is_training=True, mean=[1,2,3], std=[4,5,6])\n\ntest_tfms = create_transform(img_size, mean=[1,2,3], std=[4,5,6])\n\ndm = SLDataModule(parq_file, data_path=data_path, img_size=img_size, batch_size=batch_size,\n                  train_tfms=train_tfms, test_tfms=test_tfms, channels=channels, num_workers=6, calc_stats=True)\ndm.prepare_data()\ndm.train_tfms\n\nGlobal seed set to 42\n\n\nCalculating dataset mean and std. This may take a while.\n\nMean loop:\nBatch: 1/1\n\nStd loop:\nBatch: 1/1\n\nDone.\n\n\nCompose(\n    RandomResizedCropAndInterpolation(size=(512, 512), scale=(0.8, 1.0), ratio=(0.75, 1.3333), interpolation=bilinear)\n    RandomHorizontalFlip(p=0.5)\n    RandomVerticalFlip(p=0.5)\n    ToTensor()\n    Normalize(mean=tensor([0.7367]), std=tensor([0.4174]))\n)\n\n\n\ndm.setup()\n\n\ntb = next_batch(dm.train_dataloader())\nimg = tb['image'][0]\n\n\ntb['image'].shape, img.shape\n\n(torch.Size([4, 1, 512, 512]), torch.Size([1, 512, 512]))\n\n\n\npreds = [f'Label: {l}\\nClass: {dm.idx_to_class[int(l)]} Columns' for l in tb['label']]\npreds\n\n['Label: 1\\nClass: 2 Columns',\n 'Label: 0\\nClass: 1 Columns',\n 'Label: 1\\nClass: 2 Columns',\n 'Label: 2\\nClass: 3 Columns']\n\n\n\nshow_img([img for img in tb['image']], cmap='gray', titles=preds)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "dreamai_dl",
+    "section": "",
+    "text": "pip install dreamai_dl"
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "dreamai_dl",
+    "section": "",
+    "text": "pip install dreamai_dl"
+  }
+]
