@@ -19,9 +19,12 @@ class SLModel(L.LightningModule):
         self.example_input_array = torch.Tensor(1, in_chans, 224, 224)
         self.num_classes = model.num_classes
         self.save_hyperparameters(ignore=["model"])
-        self.train_acc = TM.Accuracy(task="multiclass", num_classes=self.num_classes)
-        self.val_acc = TM.Accuracy(task="multiclass", num_classes=self.num_classes)
-        self.test_acc = TM.Accuracy(task="multiclass", num_classes=self.num_classes)
+        self.train_acc = MulticlassAccuracy(average=None, num_classes=self.num_classes)
+        self.val_acc = MulticlassAccuracy(average=None, num_classes=self.num_classes)
+        self.test_acc = MulticlassAccuracy(average=None, num_classes=self.num_classes)
+        # self.train_acc = TM.Accuracy(task="multiclass", num_classes=self.num_classes)
+        # self.val_acc = TM.Accuracy(task="multiclass", num_classes=self.num_classes)
+        # self.test_acc = TM.Accuracy(task="multiclass", num_classes=self.num_classes)
 
     def forward(self, x):
         return self.model(x)
@@ -37,9 +40,7 @@ class SLModel(L.LightningModule):
         loss, true_labels, predicted_labels = self._shared_step(batch)
         self.log("train_loss", loss)
         self.train_acc(predicted_labels, true_labels)
-        self.log(
-            "train_acc", self.train_acc, prog_bar=True, on_epoch=True, on_step=False
-        )
+        self.log("train_acc", self.train_acc, prog_bar=True, on_epoch=True, on_step=False)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -53,6 +54,12 @@ class SLModel(L.LightningModule):
         self.test_acc(predicted_labels, true_labels)
         self.log("test_acc", self.test_acc)
 
+    def predict_step(self, batch, batch_idx):
+        images = batch["image"]
+        logits = self(images)
+        predicted_labels = torch.argmax(logits, dim=1)
+        return predicted_labels
+    
     def configure_optimizers(self):
         opt = optim.Adam(self.parameters(), lr=self.learning_rate)
         sch = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=self.cosine_t_max)

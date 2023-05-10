@@ -8,6 +8,7 @@ import torch.nn.functional as F
 from torchvision.utils import make_grid
 import lightning.pytorch.callbacks as cb
 from lightning.pytorch.tuner import Tuner
+from torchmetrics import ClasswiseWrapper
 from torchvision import transforms, models
 import torchvision.transforms.functional as TF
 from lightning.pytorch.loggers import CSVLogger
@@ -16,8 +17,8 @@ from torch.utils.data.dataset import random_split
 from sklearn.model_selection import train_test_split
 from lightning.pytorch.callbacks import ModelCheckpoint
 from timm.data.transforms_factory import create_transform
+from torchmetrics.classification import MulticlassAccuracy
 from lightning.pytorch.utilities.model_summary import ModelSummary
-
 
 from dreamai.core import *
 from dreamai.vision import *

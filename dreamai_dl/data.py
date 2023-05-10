@@ -224,3 +224,7 @@ class SLDataModule(L.LightningDataModule):
     def test_dataloader(self):
         return DataLoader(dataset=self.test_ds, batch_size=self.batch_size, drop_last=False,
                           shuffle=False, num_workers=self.num_workers, pin_memory=self.pin_memory)
+    
+    def predict_dataloader(self):
+        return DataLoader(dataset=self.test_ds, batch_size=self.batch_size, drop_last=False,
+                          shuffle=False, num_workers=self.num_workers, pin_memory=self.pin_memory)
